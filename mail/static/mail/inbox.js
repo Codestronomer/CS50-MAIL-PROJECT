@@ -59,7 +59,7 @@ function view_mail(mail_id) {
                               <p>${data['body']}`
 
     if(!data['read']) {
-      fetch('/emails' + mail_id, {
+      fetch('/emails/' + mail_id, {
         method: 'PUT',
         body: JSON.stringify({ read : true })
       })
@@ -67,17 +67,25 @@ function view_mail(mail_id) {
 
     const archive_button = document.createElement('button');
     archive_button.className = 'btn-primary m-1';
-    if (!data['archived']) {
-      archive_button.innerHTML = 'Archive' }
-    else {archive_button.innerHTML = 'Unarchive'};
+    if (data['archived']) {
+      archive_button.innerHTML = 'Unarchive' }
+    else {archive_button.innerHTML = 'Archive'};
     archive_button.addEventListener('click', function() {
-      fetch('/emails' + mail_id, {
+      fetch('/emails/' + mail_id, {
         method: 'PUT',
         body: JSON.stringify({ archived: !data['archived'] })
       })
       .then(response => load_mailbox('inbox'))
     });
     mail_id_div.append(archive_button)
+
+    const reply_button = document.createElement('button');
+    reply_button.className = 'btn-secondary m-1';
+    reply_button.addEventListener('click', ()=>compose_email)
+    document.getElementById('compose-recipients').innerText = data['sender']
+    document.getElementById('compose-subject').innerText = `Re: ${data['subject']}`
+    document.getElementById('compose-body').innerText =`On ${data['timestamp']}; ${data['sender']} wrote: ${data['body']}`
+    mail_id_div.append(reply_button)
   })
 }
 
