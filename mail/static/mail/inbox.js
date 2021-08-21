@@ -138,9 +138,9 @@ function load_mailbox(mailbox) {
       email_div.id = 'email-div-id'
 
       email_div.innerHTML = `
-        <span><b>Subject: ${element['subject']}</b></span>
-        <span>From: ${element['sender']}</span>
-        <span>Time: <i>${element['timestamp']}</i></span>
+        <span class="sender col-3">From: ${element['sender']}</span>\n
+        <span class="subject col-6"><b>${element['subject']}</b></span>
+        <span class="timestamp col-3">Time: <i>${element['timestamp']}</i></span>
         `;
 
       email_div.addEventListener('click', () => view_mail(element['id']));

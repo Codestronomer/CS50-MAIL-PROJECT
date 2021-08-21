@@ -7,13 +7,28 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
         <style>
-            div .read-mail {
-                background-color: white;
-            }
+            .read-mail, .unread-mail {
+    background-color: #EEEEEE;
+    border-color: #777777;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    margin-top: 2px;
+    padding: 12px;
+  }
 
-            div .unread-mail {
-                background-color: grey;
-            }
+  .read-mail .timestamp, .unread-mail .timestamp {
+    float: right;
+    text-align: right;
+  }
+  
+  .read-mail:hover, .unread-mail:hover {
+    background-color: #FFFAFA;
+  }
+  
+  .unread-mail {
+    background-color: #FFFFFF;
+  }
         </style>
         {% block script %}
         {% endblock %}

@@ -2,3 +2,29 @@ textarea {
     min-height: 400px;
 }
 
+body {
+    background-color: #f8f8ff;
+  }
+  
+  .read-mail, .unread-mail {
+    background-color: #EEEEEE;
+    border-color: #777777;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 1px;
+    margin-top: 2px;
+    padding: 12px;
+  }
+
+  .read-mail .timestamp, .unread-mail .timestamp {
+    float: right;
+    text-align: right;
+  }
+  
+  .read-mail:hover, .unread-mail:hover {
+    background-color: #FFFAFA;
+  }
+  
+  .unread-mail {
+    background-color: #FFFFFF;
+  }
