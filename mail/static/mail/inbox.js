@@ -26,6 +26,7 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
+// Send mail content to the api
 function send_mail(event) {
     event.preventDefault();
 
@@ -40,7 +41,7 @@ function send_mail(event) {
     .then(response => load_mailbox('sent'));
 }
 
-
+// fetchs and display the mail detail and adds archive and reply functionality
 function view_mail(mail_id) {
   fetch('/emails/' + mail_id)
   .then(response => response.json()).then(data => {
@@ -58,6 +59,8 @@ function view_mail(mail_id) {
                               <hr>
                               <p>${data['body']}`
 
+    
+    // Mark the email as read
     if(!data['read']) {
       fetch('/emails/' + mail_id, {
         method: 'PUT',
@@ -65,11 +68,13 @@ function view_mail(mail_id) {
       })
     }
 
+    // Creates the archive button and append to DOM
     const archive_button = document.createElement('button');
+
     archive_button.className = 'btn-primary m-1';
-    if (data['archived']) {
-      archive_button.innerHTML = 'Unarchive' }
-    else {archive_button.innerHTML = 'Archive'};
+
+    archive_button.innerHTML = (data['archived']) ? 'Unarchive':'Archive'
+
     archive_button.addEventListener('click', function() {
       fetch('/emails/' + mail_id, {
         method: 'PUT',
@@ -77,14 +82,32 @@ function view_mail(mail_id) {
       })
       .then(response => load_mailbox('inbox'))
     });
+
     mail_id_div.append(archive_button)
 
+    // Creates reply  button and appends to DOM
     const reply_button = document.createElement('button');
+
     reply_button.className = 'btn-secondary m-1';
-    reply_button.addEventListener('click', ()=>compose_email)
-    document.getElementById('compose-recipients').innerText = data['sender']
-    document.getElementById('compose-subject').innerText = `Re: ${data['subject']}`
-    document.getElementById('compose-body').innerText =`On ${data['timestamp']}; ${data['sender']} wrote: ${data['body']}`
+
+    reply_button.innerHTML = 'Reply';
+
+    reply_button.addEventListener('click', () => {
+      compose_email()
+
+      // Populates the fields of the compose form
+      document.getElementById('compose-recipients').value = data['sender']
+      
+      let subject = data['subject'];
+
+      if(subject.split(" ", 1)[0] != "Re:") {
+        subject = 'Re: ' + data['subject']} else {
+          subject = data['subject']}
+      document.getElementById('compose-subject').value = subject
+
+      document.getElementById('compose-body').value =`On ${data['timestamp']}; ${data['sender']} wrote: ${data['body']}`
+    })
+
     mail_id_div.append(reply_button)
   })
 }
@@ -100,15 +123,20 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
+  // fetch and display the mailbox data from the api
   fetch('/emails/' + mailbox)
   .then(response => response.json())
   .then(function(data) {
     data.forEach(element => {
+      // create a new div element
       let email_div = document.createElement('div');
-      if(element['read']) { 
-        email_div.className = 'read-mail'}
-      else { email_div.className = 'unread-mail'};
+
+      // Set element class name to read or unread
+      email_div.className = (element['read']) ? 'read-mail': 'unread-mail'
+
+
       email_div.id = 'email-div-id'
+
       email_div.innerHTML = `
         <span><b>Subject: ${element['subject']}</b></span>
         <span>From: ${element['sender']}</span>
